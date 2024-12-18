@@ -4,41 +4,117 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-    --radius: 0.5rem;
+    --background: 217.2 32.6% 17.5%;
+    --spot-primary: 221.2 83.2% 53.3%;
+    --spot-secondary: 162.9 84.1% 39.4%;
+    --transition-base: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-smooth: 500ms cubic-bezier(0.4, 0, 0.6, 1);
   }
 
   body {
-    @apply bg-navy text-light-slate;
+    @apply bg-neutral-900 text-neutral-200;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+}
+
+@layer components {
+  .section-container {
+    @apply max-w-content mx-auto px-4 sm:px-6 md:px-8 lg:px-12;
+  }
+  
+  .section-padding {
+    @apply py-24 sm:py-32;
   }
 
-  .section-padding {
-    @apply py-24 px-6 md:px-12 lg:px-24;
+  .section-heading {
+    @apply flex items-center text-3xl sm:text-4xl md:text-5xl font-bold 
+           text-neutral-50 mb-12 sm:mb-16 tracking-tight;
+  }
+
+  .section-number {
+    @apply font-mono text-primary text-2xl sm:text-3xl md:text-4xl mr-4 
+           font-semibold;
   }
 
   .heading {
-    @apply text-4xl md:text-5xl lg:text-6xl font-bold text-lightest-slate mb-6;
+    @apply text-4xl md:text-5xl lg:text-6xl font-bold 
+           text-neutral-50 tracking-tight leading-tight mb-10
+           antialiased;
   }
 
   .subheading {
-    @apply text-xl md:text-2xl text-slate mb-12;
+    @apply text-xl md:text-2xl text-neutral-200 font-medium mb-12 
+           leading-relaxed;
+  }
+
+  .nav-link {
+    @apply text-neutral-200 hover:text-primary transition-colors duration-300
+           text-base font-medium;
+  }
+
+  .button-primary {
+    @apply bg-primary hover:bg-primary-dark text-white
+           px-8 py-3 rounded-lg font-semibold text-base
+           transform hover:scale-105
+           transition-all duration-300
+           focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:outline-none;
+  }
+
+  .button-secondary {
+    @apply bg-transparent border-2 
+           border-secondary text-secondary
+           hover:bg-secondary/10
+           px-8 py-3 rounded-lg font-semibold text-base
+           transition-all duration-300
+           focus:ring-2 focus:ring-secondary focus:ring-offset-2 focus:outline-none;
+  }
+
+  .spotlight {
+    @apply absolute rounded-full opacity-20 blur-[96px] animate-pulse-slow;
+  }
+
+  .spotlight-primary {
+    @apply bg-primary/10;
+  }
+
+  .spotlight-secondary {
+    @apply bg-secondary/30;
+  }
+
+  .glass-panel {
+    @apply bg-white/[0.03] backdrop-blur-lg 
+           border border-white/[0.05] rounded-xl 
+           shadow-[0_8px_32px_0_rgba(0,0,0,0.36)] 
+           hover:border-purple-500/20 transition-all duration-500;
+  }
+
+  .like-button-pulse {
+    animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
 }
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r 
+           from-primary via-secondary to-accent;
+  }
+  
+  .bg-gradient {
+    @apply bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5;
+  }
+
+  .transition-base {
+    transition: var(--transition-base);
+  }
+  
+  .transition-smooth {
+    transition: var(--transition-smooth);
+  }
+
+  .aspect-video {
+    aspect-ratio: 16 / 9;
+  }
+}
+
+
