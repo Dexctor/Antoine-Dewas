@@ -1,5 +1,4 @@
 import React from "react";
-import { ThemeProvider } from '../ThemeProvider';
 
 import Navbar from "./Navbar";
 import Footer from "./Footer";

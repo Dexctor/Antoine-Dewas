@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import { Mail, ArrowUpRight, Loader2, CheckCircle2, XCircle } from "lucide-react";
+import { Mail, ArrowUpRight, Loader2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast"
 import emailjs from '@emailjs/browser';
 import { typography, textSizes } from "@/styles/typography";
@@ -14,7 +14,7 @@ interface FormData {
 }
 
 const WindowHeader = ({ title }: { title: string }) => (
-  <div className="flex items-center gap-2 mb-4 border-b border-neutral-800 pb-3">
+  <div className="flex items-center gap-2 mb-16 border-b border-neutral-800 pb-3">
     <div className="flex gap-1.5">
       <div className="w-3 h-3 rounded-full bg-red-500/80" />
       <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
@@ -121,11 +121,7 @@ const Contact = () => {
           <WindowHeader title="contact.tsx" />
           <div className="space-y-8">
             <div className="space-y-6">
-              <p className={`${typography.primary} ${textSizes.base} leading-relaxed`}>
-                Je suis actuellement à la recherche de nouvelles opportunités. 
-                Que vous ayez une question ou simplement envie de dire bonjour, 
-                n'hésitez pas à me contacter !
-              </p>
+              
 
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
