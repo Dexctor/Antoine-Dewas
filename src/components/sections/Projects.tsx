@@ -13,7 +13,7 @@ const Projects = () => {
       tech: ["React", "Next.js", "TailwindCSS", "Framer-motion"],
       github: "https://github.com/Dexctor/SAP-OD",
       external: "https://sap-od.vercel.app",
-      image: "/SAP-ODILEDEWAS.png",
+      image: "/SAP-ODILEDEWAS.webp",
     },
     {
       title: "NFT-Store",
@@ -22,7 +22,7 @@ const Projects = () => {
       tech: ["Next.js", "framer-motion", "TailwindCSS"],
       github: "https://github.com/Dexctor/NFT-store",
       external: "https://nft-store-six.vercel.app",
-      image: "/NFT-STORE.png",
+      image: "/NFT-STORE.webp",
     },   {
       title: "V1 Portfolio",
       description:
@@ -30,7 +30,7 @@ const Projects = () => {
       tech: ["React", "Framer-motion", "Tsparticules"],
       github: "https://github.com/Dexctor/Portfolio-v1",
       external: "https://antoinedewasv1.vercel.app",
-      image: "/Portfoliov1.png",
+      image: "/Portfoliov1.webp",
     },
   ];
 
