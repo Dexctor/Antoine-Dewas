@@ -126,13 +126,14 @@ const Hero = () => {
           <WindowControls />
           
           <div className="flex items-center flex-1 mx-2 sm:mx-4 px-2 sm:px-3 py-1.5 rounded-md bg-neutral-800/50 text-sm text-neutral-300 overflow-hidden">
-            <IconWrapper Icon={Lock} className="min-w-4 w-4 h-4 mr-1 sm:mr-2 text-emerald-500" />
-            <IconWrapper Icon={Globe} className="min-w-4 w-4 h-4 mr-1 sm:mr-2 text-neutral-400" />
+            <IconWrapper Icon={Lock} className="min-w-4 w-4 h-4 mr-1 sm:mr-2 text-emerald-500" aria-hidden="true" />
+            <IconWrapper Icon={Globe} className="min-w-4 w-4 h-4 mr-1 sm:mr-2 text-neutral-400" aria-hidden="true" />
             <a 
               href="https://antoine-dewas.vercel.app"
               target="_blank"
               rel="noopener noreferrer"
               className="truncate text-xs sm:text-sm hover:text-emerald-400 transition-colors"
+              aria-label="Visiter antoine-dewas.vercel.app (s'ouvre dans un nouvel onglet)"
             >
               antoine-dewas.vercel.app
             </a>
@@ -204,16 +205,17 @@ const Hero = () => {
               className="group relative w-full sm:w-auto px-6 py-3 rounded-lg overflow-hidden
                        bg-neutral-900/50 border border-neutral-800/50 transition-all duration-300
                        hover:border-emerald-500/50 hover:bg-neutral-800/50"
+              aria-label="Voir mes projets"
             >
               <span className="relative z-10 flex items-center justify-center gap-2
                            text-base font-medium text-neutral-200
                            group-hover:text-emerald-400 transition-colors">
-                <span>Découvrir mes projets</span>
+                Découvrir mes projets
                 <AnimatePresence mode="wait">
                   {isButtonHovered ? (
-                    <IconWrapper Icon={ArrowRight} className="w-4 h-4" />
+                    <IconWrapper Icon={ArrowRight} className="w-4 h-4" aria-hidden="true" />
                   ) : (
-                    <IconWrapper Icon={ExternalLink} className="w-4 h-4" />
+                    <IconWrapper Icon={ExternalLink} className="w-4 h-4" aria-hidden="true" />
                   )}
                 </AnimatePresence>
               </span>
@@ -293,7 +295,7 @@ const Hero = () => {
           className="w-6 h-6 animate-bounce" 
           aria-hidden="true"
         />
-        <span className="sr-only">Défiler vers la section suivante</span>
+        <span className="sr-only">Défiler vers la section À propos</span>
       </button>
     </section>
   );
