@@ -1,7 +1,8 @@
 import { useState, useEffect, useMemo, useCallback, memo } from "react";
-import { Menu, X, Github, Linkedin, Mail, ChevronDown, ArrowDown, Lock, Globe } from "lucide-react";
+import { Menu, X, Github, Linkedin, Mail, ChevronDown, ArrowDown, Lock, Globe, Share2, Copy, Twitter, Facebook } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import debounce from "lodash/debounce";
+import { motion, AnimatePresence } from "framer-motion";
 
 // Types
 interface NavItemProps {
@@ -25,6 +26,11 @@ interface MobileMenuProps {
 interface IconWrapperProps {
   Icon: LucideIcon;
   className?: string;
+}
+
+interface NotificationProps {
+  message: string;
+  isVisible: boolean;
 }
 
 // Composants optimisés
@@ -99,10 +105,36 @@ const MobileMenu = memo(({ isOpen, setIsOpen, navItems, socialLinks }: MobileMen
 
 MobileMenu.displayName = 'MobileMenu';
 
+const CopyNotification = memo(({ message, isVisible }: NotificationProps) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
+    exit={{ opacity: 0, y: 20 }}
+    className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50"
+  >
+    <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-black/80 backdrop-blur-sm border border-emerald-500/20 shadow-lg shadow-emerald-500/10">
+      <IconWrapper Icon={Copy} className="w-4 h-4 text-emerald-400" />
+      <span className="text-sm text-emerald-400">{message}</span>
+      <div className="absolute bottom-0 left-0 h-[2px] bg-emerald-400/50 rounded-full w-full">
+        <motion.div
+          initial={{ width: "100%" }}
+          animate={{ width: "0%" }}
+          transition={{ duration: 2, ease: "linear" }}
+          className="h-full bg-emerald-400"
+        />
+      </div>
+    </div>
+  </motion.div>
+));
+
+CopyNotification.displayName = 'CopyNotification';
+
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isContactMenuOpen, setIsContactMenuOpen] = useState(false);
+  const [isShareMenuOpen, setIsShareMenuOpen] = useState(false);
+  const [copySuccess, setCopySuccess] = useState(false);
 
   const navItems = useMemo(() => [
     { name: "À propos", href: "#about" },
@@ -160,6 +192,52 @@ const Navbar = () => {
       document.body.style.overflow = '';
     };
   }, [isOpen]);
+
+  const handleCopyUrl = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setCopySuccess(true);
+      setTimeout(() => setCopySuccess(false), 2000);
+      setIsShareMenuOpen(false);
+    } catch (err) {
+      console.error('Erreur lors de la copie :', err);
+    }
+  };
+
+  const shareToSocial = (platform: string) => {
+    const url = encodeURIComponent(window.location.href);
+    const title = encodeURIComponent("Antoine Dewas - Portfolio");
+    const description = encodeURIComponent("Découvrez mon portfolio de développeur web ! #webdev #portfolio #developer");
+    
+    const links = {
+      twitter: `https://twitter.com/intent/tweet?url=${url}&text=${description}`,
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+      linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${url}&title=${title}&summary=${description}`
+    };
+
+    window.open(links[platform as keyof typeof links], '_blank', 'noopener,noreferrer,width=600,height=400');
+    setIsShareMenuOpen(false);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (isShareMenuOpen && !(event.target as Element).closest('#share-menu')) {
+        setIsShareMenuOpen(false);
+      }
+    };
+
+    if (isShareMenuOpen) {
+      document.addEventListener('click', handleClickOutside);
+      return () => document.removeEventListener('click', handleClickOutside);
+    }
+  }, [isShareMenuOpen]);
+
+  useEffect(() => {
+    if (copySuccess) {
+      const timer = setTimeout(() => setCopySuccess(false), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [copySuccess]);
 
   return (
     <header>
@@ -226,6 +304,57 @@ const Navbar = () => {
               )}
             </div>
 
+            <div className="relative" id="share-menu">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsShareMenuOpen(!isShareMenuOpen);
+                }}
+                className="group relative px-3 py-2 flex items-center"
+                aria-expanded={isShareMenuOpen}
+                aria-haspopup="true"
+              >
+                <span className="relative z-10 flex items-center text-slate hover:text-primary transition-colors duration-300">
+                  <IconWrapper Icon={Share2} className="w-4 h-4 mr-2" />
+                  Partager
+                </span>
+                <div className="absolute -inset-1 bg-white/[0.03] rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              </button>
+
+              {isShareMenuOpen && (
+                <div className="absolute right-0 mt-2 w-48 rounded-lg bg-black/80 backdrop-blur-xl shadow-lg">
+                  <button
+                    onClick={handleCopyUrl}
+                    className="w-full flex items-center space-x-3 px-4 py-3 text-slate hover:text-primary hover:bg-white/[0.03] transition-colors duration-200 rounded-t-lg"
+                  >
+                    <IconWrapper Icon={Copy} className="w-4 h-4" />
+                    <span>{copySuccess ? 'Copié !' : 'Copier le lien'}</span>
+                  </button>
+                  <button
+                    onClick={() => shareToSocial('twitter')}
+                    className="w-full flex items-center space-x-3 px-4 py-3 text-slate hover:text-primary hover:bg-white/[0.03] transition-colors duration-200"
+                  >
+                    <IconWrapper Icon={Twitter} className="w-4 h-4" />
+                    <span>Twitter</span>
+                  </button>
+                  <button
+                    onClick={() => shareToSocial('linkedin')}
+                    className="w-full flex items-center space-x-3 px-4 py-3 text-slate hover:text-primary hover:bg-white/[0.03] transition-colors duration-200"
+                  >
+                    <IconWrapper Icon={Linkedin} className="w-4 h-4" />
+                    <span>LinkedIn</span>
+                  </button>
+                  <button
+                    onClick={() => shareToSocial('facebook')}
+                    className="w-full flex items-center space-x-3 px-4 py-3 text-slate hover:text-primary hover:bg-white/[0.03] transition-colors duration-200 rounded-b-lg"
+                  >
+                    <IconWrapper Icon={Facebook} className="w-4 h-4" />
+                    <span>Facebook</span>
+                  </button>
+                </div>
+              )}
+            </div>
+
             <div className="flex items-center space-x-4 pl-4 border-l border-slate-700">
               {socialLinks.map((link) => (
                 <a
@@ -261,6 +390,15 @@ const Navbar = () => {
           socialLinks={socialLinks}
         />
       )}
+
+      <AnimatePresence>
+        {copySuccess && (
+          <CopyNotification 
+            message="Lien copié avec succès !" 
+            isVisible={copySuccess} 
+          />
+        )}
+      </AnimatePresence>
     </header>
   );
 };
