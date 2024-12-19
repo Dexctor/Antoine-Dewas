@@ -19,6 +19,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dotenv": "^16.4.7",
+    "firebase": "^11.1.0",
     "framer-motion": "^11.13.5",
     "lodash": "^4.17.21",
     "lucide-react": "^0.468.0",

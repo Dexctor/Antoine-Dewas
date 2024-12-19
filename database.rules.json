@@ -1,0 +1,8 @@
+{
+  "rules": {
+    "likes": {
+      ".read": true,
+      ".write": true
+    }
+  }
+} 

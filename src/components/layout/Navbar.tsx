@@ -3,6 +3,7 @@ import { Menu, X, Github, Linkedin, Mail, ChevronDown, ArrowDown, Lock, Globe, S
 import type { LucideIcon } from "lucide-react";
 import debounce from "lodash/debounce";
 import { motion, AnimatePresence } from "framer-motion";
+import LikeButton from '../LikeButton';
 
 // Types
 interface NavItemProps {
@@ -356,6 +357,7 @@ const Navbar = () => {
             </div>
 
             <div className="flex items-center space-x-4 pl-4 border-l border-slate-700">
+              <LikeButton />
               {socialLinks.map((link) => (
                 <a
                   key={link.label}
