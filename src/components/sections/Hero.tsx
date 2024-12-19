@@ -282,22 +282,19 @@ const Hero = () => {
         </motion.div>
       </motion.div>
 
-      <motion.button
-        onClick={() => scrollToSection('about')}
-        className="absolute left-1/2 -translate-x-1/2 bottom-8 z-20 cursor-pointer"
-        animate={{ 
-          y: [0, 5, 0],
-          opacity: [0.7, 1, 0.7]
+      <button 
+        onClick={() => {
+          document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
         }}
-        transition={{ 
-          duration: 1.5,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}
-        whileHover={{ scale: 1.05 }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 p-2 text-slate hover:text-primary transition-colors duration-300"
+        aria-label="Défiler vers la section À propos"
       >
-        <IconWrapper Icon={ChevronDown} className="w-6 h-6 sm:w-8 sm:h-8 text-emerald-400 hover:text-emerald-300 transition-colors" />
-      </motion.button>
+        <ChevronDown 
+          className="w-6 h-6 animate-bounce" 
+          aria-hidden="true"
+        />
+        <span className="sr-only">Défiler vers la section suivante</span>
+      </button>
     </section>
   );
 };
