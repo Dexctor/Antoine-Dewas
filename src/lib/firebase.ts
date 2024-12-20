@@ -40,4 +40,22 @@ try {
   throw error;
 }
 
-export { db }; 
+const LIKE_COOLDOWN = 45 * 60 * 1000; // 45 minutes en millisecondes
+
+interface UserLike {
+  lastLikeTime: number;
+  count: number;
+}
+
+// Fonction pour générer un ID unique pour l'utilisateur
+const getUserId = () => {
+  let userId = localStorage.getItem('userId');
+  if (!userId) {
+    userId = crypto.randomUUID();
+    localStorage.setItem('userId', userId);
+  }
+  return userId;
+};
+
+export { db, LIKE_COOLDOWN, getUserId };
+export type { UserLike }; 

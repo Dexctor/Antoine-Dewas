@@ -2,7 +2,17 @@
   "rules": {
     "likes": {
       ".read": true,
-      ".write": true
+      "count": {
+        ".read": true,
+        ".write": true
+      },
+      "users": {
+        "$userId": {
+          ".read": true,
+          ".write": "!data.exists() || (data.exists() && (!data.child('lastLikeTime').exists() || now - data.child('lastLikeTime').val() > 2700000))",
+          ".validate": "newData.hasChild('lastLikeTime') && newData.child('lastLikeTime').isNumber() && newData.child('lastLikeTime').val() <= now"
+        }
+      }
     }
   }
 } 

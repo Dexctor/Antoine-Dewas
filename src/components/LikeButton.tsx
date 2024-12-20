@@ -1,27 +1,69 @@
 import { useState, useEffect, useCallback } from 'react';
-import { ref, onValue, runTransaction } from 'firebase/database';
-import { db } from '@/lib/firebase';
-import { Heart } from 'lucide-react';
+import { ref, onValue, runTransaction, get } from 'firebase/database';
+import { db, LIKE_COOLDOWN, getUserId } from '@/lib/firebase';
+import type { UserLike } from '@/lib/firebase';
+import { Heart, Clock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const LikeButton = () => {
   const [likes, setLikes] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
+  const [isLocked, setIsLocked] = useState(false);
+  const userId = getUserId();
 
-  // Configurer l'écouteur de Firebase en temps réel
   useEffect(() => {
-    const likesRef = ref(db, 'likes');
+    const checkTimelock = async () => {
+      const userLikesRef = ref(db, `likes/users/${userId}`);
+      const snapshot = await get(userLikesRef);
+      const data = snapshot.val();
+      
+      if (data?.lastLikeTime) {
+        const timePassed = Date.now() - data.lastLikeTime;
+        if (timePassed < LIKE_COOLDOWN) {
+          const remaining = LIKE_COOLDOWN - timePassed;
+          setTimeRemaining(remaining);
+          setIsLocked(true);
+          return true;
+        }
+      }
+      setIsLocked(false);
+      setTimeRemaining(null);
+      return false;
+    };
+
+    checkTimelock();
+
+    const interval = setInterval(async () => {
+      const userLikesRef = ref(db, `likes/users/${userId}`);
+      const snapshot = await get(userLikesRef);
+      const data = snapshot.val();
+      
+      if (data?.lastLikeTime) {
+        const remaining = LIKE_COOLDOWN - (Date.now() - data.lastLikeTime);
+        setTimeRemaining(remaining);
+        
+        if (remaining <= 0) {
+          setIsLocked(false);
+          setTimeRemaining(null);
+        }
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [userId]);
+
+  useEffect(() => {
+    const likesRef = ref(db, 'likes/count');
 
     const unsubscribe = onValue(likesRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data && typeof data.count === 'number') {
-        setLikes(data.count);
+      const count = snapshot.val();
+      if (typeof count === 'number') {
+        setLikes(count);
       } else {
-        // Initialiser si nécessaire
         runTransaction(likesRef, (currentData) => {
-          if (currentData === null) return { count: 0 };
-          return currentData;
+          return currentData === null ? 0 : currentData;
         });
       }
     });
@@ -29,25 +71,35 @@ const LikeButton = () => {
     return () => unsubscribe();
   }, []);
 
-  // Optimiser la fonction de like avec useCallback et runTransaction
+  const formatTimeRemaining = (ms: number): string => {
+    const minutes = Math.floor(ms / 60000);
+    const seconds = Math.floor((ms % 60000) / 1000);
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  };
+
   const handleLike = useCallback(async () => {
-    if (isAnimating) return;
-    setIsAnimating(true);
-    
-    const likesRef = ref(db, 'likes');
+    if (isAnimating || isLocked) return;
     
     try {
-      await runTransaction(likesRef, (currentData) => {
-        if (currentData === null) {
-          return { count: 1 };
+      const userLikesRef = ref(db, `likes/users/${userId}`);
+      const countRef = ref(db, 'likes/count');
+      
+      await runTransaction(userLikesRef, (currentData) => {
+        if (currentData?.lastLikeTime) {
+          const timePassed = Date.now() - currentData.lastLikeTime;
+          if (timePassed < LIKE_COOLDOWN) {
+            return undefined;
+          }
         }
-        
-        return {
-          count: currentData.count + 1
-        };
+        return { lastLikeTime: Date.now() };
       });
 
-      // Animation de succès
+      await runTransaction(countRef, (currentCount) => {
+        return (currentCount || 0) + 1;
+      });
+
+      setIsLocked(true);
+      setIsAnimating(true);
       setTimeout(() => {
         setIsAnimating(false);
       }, 500);
@@ -56,45 +108,57 @@ const LikeButton = () => {
       setError(error.message);
       setIsAnimating(false);
     }
-  }, [isAnimating]);
+  }, [isAnimating, isLocked, userId]);
 
   return (
     <div className="relative">
       <motion.button
         onClick={handleLike}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        className="group flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 bg-white/[0.03] text-slate hover:text-pink-500"
+        whileHover={{ scale: isLocked ? 1 : 1.05 }}
+        whileTap={{ scale: isLocked ? 1 : 0.95 }}
+        className={`group flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 bg-white/[0.03] text-slate hover:text-pink-500 ${
+          isLocked ? 'cursor-not-allowed opacity-75' : ''
+        }`}
         aria-label="Aimer le site"
-        disabled={isAnimating}
+        disabled={isLocked}
       >
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={isAnimating ? 'animating' : 'static'}
-            initial={{ scale: 1 }}
-            animate={isAnimating ? {
-              scale: [1, 1.5, 1],
-              rotate: [0, 15, -15, 0],
-            } : {}}
-            transition={{ duration: 0.5 }}
-          >
-            <Heart
-              className={`w-5 h-5 fill-none group-hover:fill-pink-500 transition-colors duration-300 ${
-                isAnimating ? 'fill-pink-500' : ''
-              }`}
-            />
-          </motion.div>
-        </AnimatePresence>
-        
-        <motion.span 
-          className="font-mono text-sm"
-          key={likes}
-          initial={{ y: -10, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.3 }}
-        >
-          {likes.toLocaleString()}
-        </motion.span>
+        {isLocked ? (
+          <div className="flex items-center gap-2">
+            <Clock className="w-5 h-5" />
+            <span className="font-mono text-sm">
+              {formatTimeRemaining(timeRemaining || 0)}
+            </span>
+          </div>
+        ) : (
+          <>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={isAnimating ? 'animating' : 'static'}
+                initial={{ scale: 1 }}
+                animate={isAnimating ? {
+                  scale: [1, 1.5, 1],
+                  rotate: [0, 15, -15, 0],
+                } : {}}
+                transition={{ duration: 0.5 }}
+              >
+                <Heart
+                  className={`w-5 h-5 fill-none group-hover:fill-pink-500 transition-colors duration-300 ${
+                    isAnimating ? 'fill-pink-500' : ''
+                  }`}
+                />
+              </motion.div>
+            </AnimatePresence>
+            <motion.span 
+              className="font-mono text-sm"
+              key={likes}
+              initial={{ y: -10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              {likes.toLocaleString()}
+            </motion.span>
+          </>
+        )}
       </motion.button>
       
       {error && (
@@ -102,7 +166,7 @@ const LikeButton = () => {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 10 }}
-          className="absolute top-full left-0 mt-2 text-red-500 text-sm"
+          className="absolute top-full left-0 mt-2 text-red-500 text-sm whitespace-nowrap"
         >
           {error}
         </motion.div>
