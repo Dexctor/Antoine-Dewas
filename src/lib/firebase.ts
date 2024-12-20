@@ -40,7 +40,14 @@ try {
   throw error;
 }
 
-const LIKE_COOLDOWN = 45 * 60 * 1000; // 45 minutes en millisecondes
+const LIKE_COOLDOWN = 5 * 60 * 1000; // 5 minutes en millisecondes
+
+// Messages personnalisés pour l'utilisateur
+const LIKE_MESSAGES = {
+  wait: "Merci pour votre like ! Vous pourrez liker à nouveau dans",
+  error: "Veuillez patienter encore",
+  success: "Merci pour votre soutien ! 💖"
+} as const;
 
 interface UserLike {
   lastLikeTime: number;
@@ -57,5 +64,5 @@ const getUserId = () => {
   return userId;
 };
 
-export { db, LIKE_COOLDOWN, getUserId };
+export { db, LIKE_COOLDOWN, getUserId, LIKE_MESSAGES };
 export type { UserLike }; 

@@ -9,7 +9,7 @@
       "users": {
         "$userId": {
           ".read": true,
-          ".write": "!data.exists() || (data.exists() && (!data.child('lastLikeTime').exists() || now - data.child('lastLikeTime').val() > 2700000))",
+          ".write": "!data.exists() || (data.exists() && (!data.child('lastLikeTime').exists() || now - data.child('lastLikeTime').val() > 300000))",
           ".validate": "newData.hasChild('lastLikeTime') && newData.child('lastLikeTime').isNumber() && newData.child('lastLikeTime').val() <= now"
         }
       }
