@@ -28,8 +28,9 @@ const Contact = () => {
   const [ref, inView] = useInView({ threshold: 0.2, triggerOnce: true });
   const [state, handleSubmit] = useForm("mvggnyga");
   const { toast } = useToast();
+  const formRef = React.useRef<HTMLFormElement>(null);
 
-  // Afficher le toast de succès quand l'envoi réussit
+  // Afficher le toast de succès quand l'envoi réussit et reset le formulaire
   React.useEffect(() => {
     if (state.succeeded) {
       toast({
@@ -38,6 +39,11 @@ const Contact = () => {
         variant: "default",
         className: "border-2 border-emerald-500/50 bg-emerald-500/10"
       });
+      
+      // Reset le formulaire
+      if (formRef.current) {
+        formRef.current.reset();
+      }
     }
   }, [state.succeeded, toast]);
 
@@ -76,7 +82,7 @@ const Contact = () => {
           <WindowHeader title="contact.tsx" />
           <div className="space-y-8">
             <div className="space-y-6">
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <label htmlFor="name" className={`${typography.accent} ${textSizes.small} font-mono`}>
