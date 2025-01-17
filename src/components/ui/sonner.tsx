@@ -1,27 +1,35 @@
-import { useTheme } from "next-themes"
-import { Toaster as Sonner } from "sonner"
+import { useEffect, useState } from 'react'
+import { Toaster as Sonner } from 'sonner'
 
-type ToasterProps = React.ComponentProps<typeof Sonner>
+interface ToasterProps {
+  className?: string
+  theme?: 'light' | 'dark'
+}
 
-const Toaster = ({ ...props }: ToasterProps) => {
-  const { theme = "system" } = useTheme()
+const Toaster = ({ theme = 'dark', className }: ToasterProps) => {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) {
+    return null
+  }
 
   return (
     <Sonner
-      theme={theme as ToasterProps["theme"]}
-      className="toaster group"
+      theme={theme}
+      className={className}
       toastOptions={{
         classNames: {
-          toast:
-            "group toast group-[.toaster]:bg-background group-[.toaster]:text-foreground group-[.toaster]:border-border group-[.toaster]:shadow-lg",
-          description: "group-[.toast]:text-muted-foreground",
-          actionButton:
-            "group-[.toast]:bg-primary group-[.toast]:text-primary-foreground",
-          cancelButton:
-            "group-[.toast]:bg-muted group-[.toast]:text-muted-foreground",
+          toast: 'group toast group-[.toaster]:bg-neutral-900/95 group-[.toaster]:text-neutral-50 group-[.toaster]:border-neutral-800/50 group-[.toaster]:shadow-lg',
+          description: 'group-[.toast]:text-neutral-400',
+          actionButton: 'group-[.toast]:bg-emerald-500 group-[.toast]:text-emerald-50',
+          cancelButton: 'group-[.toast]:bg-neutral-800 group-[.toast]:text-neutral-50',
+          closeButton: 'group-[.toast]:hover:bg-neutral-800',
         },
       }}
-      {...props}
     />
   )
 }

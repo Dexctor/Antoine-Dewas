@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState, useCallback, useMemo, memo } from "react";
 import { ArrowRight, ChevronDown, ExternalLink, Globe, Lock, LayoutGrid, X, Sparkles } from "lucide-react";
 import { motion, useAnimation, useReducedMotion, AnimatePresence } from "framer-motion";

@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect, useMemo, useCallback, memo } from "react";
-import { Menu, X, Github, Linkedin, Mail, ChevronDown, ArrowDown, Lock, Globe, Share2, Copy, Twitter, Facebook } from "lucide-react";
+import { Menu, X, Github, Linkedin, Mail, ChevronDown, ArrowDown, Lock, Globe, Share2, Copy, Twitter, Facebook, Coffee } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import debounce from "lodash/debounce";
 import { motion, AnimatePresence } from "framer-motion";
@@ -252,11 +253,24 @@ const Navbar = () => {
         aria-label="Navigation principale"
       >
         <div className="section-container h-20 flex justify-between items-center">
-          <a 
-            href="#" 
-            className="relative text-4xl font-bold text-slate-lightest hover:text-primary transition-colors duration-300"
-          >
-          </a>
+          <div className="flex items-center gap-4">
+            <a 
+              href="https://buymeacoffee.com/antoinedewas"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-3 py-1.5 text-sm border border-[#FFDD00]/30 text-[#FFDD00] rounded-md hover:bg-[#FFDD00]/10 transition-all duration-300"
+              aria-label="Buy me a coffee"
+            >
+              <IconWrapper Icon={Coffee} className="w-4 h-4" />
+              <span className="hidden sm:inline font-medium">Buy me a coffee</span>
+            </a>
+
+            <a 
+              href="#" 
+              className="relative text-4xl font-bold text-slate-lightest hover:text-primary transition-colors duration-300"
+            >
+            </a>
+          </div>
 
           <div className="hidden md:flex items-center space-x-8">
             {navItems.map((item, index) => (

@@ -40,7 +40,7 @@ const Contact = () => {
     
     try {
       const response = await emailjs.send(
-        import.meta.env.VITE_PUBLIC_EMAILJS_SERVICE_ID!,
+        import.meta.env.VITE_PUBLIC_EMAILJS_GMAIL_SERVICE_ID!,
         import.meta.env.VITE_PUBLIC_EMAILJS_TEMPLATE_ID!,
         {
           from_name: formData.name,
@@ -56,7 +56,7 @@ const Contact = () => {
         setFormData({ name: "", email: "", message: "" });
         toast({
           title: "Message envoyé avec succès !",
-          description: "Je vous répondrai dans les 24 heures ouvrées. Merci de votre message.",
+          description: "Je vous répondrai dans les prochaines 24h. Merci de votre message.",
           variant: "default",
           className: "border-2 border-emerald-500/50 bg-emerald-500/10"
         });

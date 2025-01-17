@@ -14,8 +14,10 @@
     "@emailjs/browser": "^4.4.1",
     "@radix-ui/react-toast": "^1.2.1",
     "@radix-ui/react-tooltip": "^1.1.4",
+    "@react-spring/web": "^9.7.5",
     "@tanstack/react-query": "^5.62.8",
     "@tsparticles/slim": "^3.0.0",
+    "@vercel/analytics": "^1.4.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dotenv": "^16.4.7",
@@ -23,13 +25,20 @@
     "framer-motion": "^11.13.5",
     "lodash": "^4.17.21",
     "lucide-react": "^0.468.0",
+    "next-themes": "^0.4.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-icons": "^5.4.0",
     "react-intersection-observer": "^9.14.0",
+    "react-particles": "^2.9.3",
     "react-router-dom": "^6.26.2",
+    "react-scroll": "^1.9.0",
+    "sonner": "^1.7.1",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
+    "tsparticles": "^2.9.3",
+    "tsparticles-engine": "^2.12.0",
+    "use-sound": "^4.0.3",
     "web-vitals": "^4.2.4"
   },
   "devDependencies": {
@@ -45,10 +54,16 @@
     "eslint-plugin-react-refresh": "^0.4.9",
     "globals": "^15.9.0",
     "lovable-tagger": "^1.0.19",
+    "msw": "^2.7.0",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.11",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.0.1",
     "vite": "^5.4.1"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
   }
 }
