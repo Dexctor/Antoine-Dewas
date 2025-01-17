@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useForm, ValidationError } from '@formspree/react';
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { Mail, ArrowUpRight, Loader2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast"
-import emailjs from '@emailjs/browser';
 import { typography, textSizes } from "@/styles/typography";
+import React from 'react';
 
 // Ajout du type pour le formulaire
 interface FormData {
@@ -26,65 +26,20 @@ const WindowHeader = ({ title }: { title: string }) => (
 
 const Contact = () => {
   const [ref, inView] = useInView({ threshold: 0.2, triggerOnce: true });
-  const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState<FormData>({
-    name: "",
-    email: "",
-    message: "",
-  });
+  const [state, handleSubmit] = useForm("mvggnyga");
   const { toast } = useToast();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    
-    try {
-      const response = await emailjs.send(
-        import.meta.env.VITE_PUBLIC_EMAILJS_GMAIL_SERVICE_ID!,
-        import.meta.env.VITE_PUBLIC_EMAILJS_TEMPLATE_ID!,
-        {
-          from_name: formData.name,
-          from_email: formData.email,
-          message: formData.message,
-          to_name: 'Antoine',
-          reply_to: formData.email,
-        },
-        import.meta.env.VITE_PUBLIC_EMAILJS_PUBLIC_KEY
-      );
-
-      if (response.status === 200) {
-        setFormData({ name: "", email: "", message: "" });
-        toast({
-          title: "Message envoyé avec succès !",
-          description: "Je vous répondrai dans les prochaines 24h. Merci de votre message.",
-          variant: "default",
-          className: "border-2 border-emerald-500/50 bg-emerald-500/10"
-        });
-      }
-    } catch (error) {
-      console.error('Error sending email:', error);
+  // Afficher le toast de succès quand l'envoi réussit
+  React.useEffect(() => {
+    if (state.succeeded) {
       toast({
-        title: "Erreur",
-        description: "Une erreur est survenue lors de l'envoi du message. Veuillez réessayer.",
-        variant: "destructive",
-        className: "border-2 border-red-500/50 bg-red-500/10"
+        title: "Message envoyé avec succès !",
+        description: "Je vous répondrai dans les prochaines 24h. Merci de votre message.",
+        variant: "default",
+        className: "border-2 border-emerald-500/50 bg-emerald-500/10"
       });
-    } finally {
-      setIsLoading(false);
     }
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData(prev => ({
-      ...prev,
-      [e.target.name]: e.target.value
-    }));
-  };
-
-  const validateEmail = (email: string) => {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(email);
-  };
+  }, [state.succeeded, toast]);
 
   return (
     <section ref={ref} id="contact" className="py-12 sm:py-20 relative overflow-hidden px-4 sm:px-6 md:px-8">
@@ -121,8 +76,6 @@ const Contact = () => {
           <WindowHeader title="contact.tsx" />
           <div className="space-y-8">
             <div className="space-y-6">
-              
-
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
@@ -133,8 +86,6 @@ const Contact = () => {
                       type="text"
                       id="name"
                       name="name"
-                      value={formData.name}
-                      onChange={handleChange}
                       required
                       className="w-full px-4 py-3 rounded-lg font-mono
                                bg-neutral-900/50 border border-neutral-700/50 
@@ -143,6 +94,7 @@ const Contact = () => {
                                transition-all duration-200"
                       placeholder='"Votre nom complet"'
                     />
+                    <ValidationError prefix="Name" field="name" errors={state.errors} />
                   </div>
 
                   <div className="space-y-2">
@@ -153,8 +105,6 @@ const Contact = () => {
                       type="email"
                       id="email"
                       name="email"
-                      value={formData.email}
-                      onChange={handleChange}
                       required
                       className="w-full px-4 py-3 rounded-lg font-mono
                                bg-neutral-900/50 border border-neutral-700/50 
@@ -163,6 +113,7 @@ const Contact = () => {
                                transition-all duration-200"
                       placeholder='"votre@email.com"'
                     />
+                    <ValidationError prefix="Email" field="email" errors={state.errors} />
                   </div>
                 </div>
 
@@ -173,8 +124,6 @@ const Contact = () => {
                   <textarea
                     id="message"
                     name="message"
-                    value={formData.message}
-                    onChange={handleChange}
                     required
                     rows={5}
                     className="w-full px-4 py-3 rounded-lg font-mono
@@ -184,12 +133,13 @@ const Contact = () => {
                              transition-all duration-200 resize-none"
                     placeholder='"Votre message..."'
                   />
+                  <ValidationError prefix="Message" field="message" errors={state.errors} />
                 </div>
 
                 <div className="flex justify-end">
                   <motion.button
                     type="submit"
-                    disabled={isLoading}
+                    disabled={state.submitting}
                     className="relative inline-flex items-center justify-center gap-2 px-8 py-3
                              bg-white/5
                              border border-white/10 hover:border-white/20
@@ -204,7 +154,7 @@ const Contact = () => {
                     whileTap={{ scale: 0.98 }}
                   >
                     <div className="relative flex items-center gap-2">
-                      {isLoading ? (
+                      {state.submitting ? (
                         <>
                           <Loader2 className="w-5 h-5 animate-spin text-white/70" />
                           <span className="text-white/70">En cours d'envoi...</span>
