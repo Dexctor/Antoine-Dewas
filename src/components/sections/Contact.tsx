@@ -68,9 +68,6 @@ const Contact = () => {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           className={`${typography.heading} ${textSizes.section} flex items-center gap-4 w-fit`}
         >
-          <span className={`section-number ${typography.secondary}`}>
-            03<span className="ml-0.5 group-hover:text-emerald-400">.</span>
-          </span>
           <span className="relative">Contact</span>
         </motion.h2>
 

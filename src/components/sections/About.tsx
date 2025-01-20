@@ -100,15 +100,22 @@ const About = () => {
     "OpenAI API"
   ];
 
-  const techStack = [
-    { name: "Next.js", logo: "/assets/Nextjs-logo.svg" },
-    { name: "React", logo: "/assets/React-icon.svg" },
-    { name: "TypeScript", logo: "/assets/Typescript-logo.svg" },
-    { name: "Tailwind", logo: "/assets/Tailwind-Logo.svg" },
-    { name: "OpenAI", logo: "/assets/openai-icon.svg" },
-    { name: "Wordpress", logo: "/assets/Wordpress-Logo.svg" },
-    { name: "PayloadCMS", logo: "/assets/payload-logo.svg" },
-  ];
+  const skillCategories = {
+    "Frontend": [
+      { name: "React", logo: "/assets/React-icon.svg" },
+      { name: "Next.js", logo: "/assets/Nextjs-logo.svg" },
+      { name: "TypeScript", logo: "/assets/Typescript-logo.svg" },
+      { name: "TailwindCSS", logo: "/assets/Tailwind-Logo.svg" },
+    ],
+    "CMS & Backend": [
+      { name: "WordPress", logo: "/assets/Wordpress-Logo.svg" },
+      { name: "PayloadCMS", logo: "/assets/payload-logo.svg" },
+      { name: "Node.js", logo: "/assets/nodejs.svg" },
+    ],
+    "AI & API": [
+      { name: "OpenAI", logo: "/assets/openai-icon.svg" },
+    ]
+  };
 
   const handleTechHover = useCallback((name: string) => {
     setHoveredTech(name);
@@ -133,16 +140,13 @@ const About = () => {
         }}
       />
       
-      <div className="relative z-10 max-w-6xl mx-auto space-y-8">
+      <div className="relative z-10 max-w-6xl mx-auto space-y-12">
         <motion.h2 
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
           variants={animations.item}
           className={`${typography.heading} section-heading group relative flex items-center gap-4 w-fit`}
         >
-          <span className={`section-number ${typography.secondary}`}>
-            01<span className="ml-0.5 group-hover:text-emerald-400">.</span>
-          </span>
           <span className="relative">À propos</span>
         </motion.h2>
 
@@ -150,11 +154,12 @@ const About = () => {
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
           variants={animations.container}
-          className="grid grid-cols-1 lg:grid-cols-2 gap-6"
+          className="grid grid-cols-1 lg:grid-cols-3 gap-6"
         >
+          {/* About Panel */}
           <motion.div 
             variants={animations.item}
-            className="glass-panel p-6 rounded-lg bg-neutral-900/50 border border-neutral-700/50 backdrop-blur-sm"
+            className="glass-panel p-6 rounded-lg bg-neutral-900/50 border border-neutral-700/50 backdrop-blur-sm lg:col-span-3"
           >
             <WindowHeader title="about.tsx" />
             <div className="space-y-4">
@@ -167,49 +172,55 @@ const About = () => {
             </div>
           </motion.div>
 
-          <motion.div 
-            variants={animations.item}
-            className="glass-panel p-6 rounded-lg bg-neutral-900/50 border border-neutral-700/50 backdrop-blur-sm"
-          >
-            <WindowHeader title="skills.tsx" />
-            <ul className="grid grid-cols-2 gap-x-8 gap-y-3">
-              {skills.map((skill) => (
-                <motion.li
-                  key={skill}
-                  className={`flex items-center text-base transition-all duration-200 ease-out
-                    ${hoveredTech && skill.toLowerCase().includes(hoveredTech.toLowerCase())
-                      ? 'text-neutral-300 font-medium translate-x-2' 
-                      : 'text-neutral-200 hover:text-purple-400'
-                    }`}
-                  style={{
-                    transitionTimingFunction: hoveredTech && skill.toLowerCase().includes(hoveredTech.toLowerCase())
-                      ? 'cubic-bezier(0.34, 1.56, 0.64, 1)'
-                      : 'ease-out'
-                  }}
-                >
-                  <span className="text-purple-400 mr-2">▹</span>
-                  {skill}
-                </motion.li>
-              ))}
-            </ul>
-          </motion.div>
-
-          <motion.div 
-            variants={animations.item}
-            className="glass-panel p-6 rounded-lg bg-neutral-900/50 border border-neutral-700/50 backdrop-blur-sm lg:col-span-2 hidden sm:block"
-          >
-            <WindowHeader title="tech-stack.tsx" />
-            <div className="grid grid-cols-7 gap-6 justify-items-center items-center">
-              {techStack.map((tech) => (
-                <TechItem
-                  key={tech.name}
-                  {...tech}
-                  onHover={handleTechHover}
-                />
-              ))}
-            </div>
-          </motion.div>
+          {/* Tech Categories */}
+          {Object.entries(skillCategories).map(([category, techs]) => (
+            <motion.div 
+              key={category}
+              variants={animations.item}
+              className="glass-panel p-6 rounded-lg bg-neutral-900/50 border border-neutral-700/50 backdrop-blur-sm"
+            >
+              <WindowHeader title={`${category.toLowerCase()}.tsx`} />
+              <div className="space-y-6">
+                <h3 className="text-lg font-medium text-neutral-200 mb-4">{category}</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  {techs.map((tech) => (
+                    <div
+                      key={tech.name}
+                      className={`flex items-center gap-3 p-3 rounded-lg transition-all duration-300
+                        ${hoveredTech === tech.name 
+                          ? 'bg-neutral-800/50 shadow-lg translate-x-1' 
+                          : 'bg-transparent'}`}
+                      onMouseEnter={() => setHoveredTech(tech.name)}
+                      onMouseLeave={() => setHoveredTech("")}
+                    >
+                      <img 
+                        src={tech.logo} 
+                        alt={tech.name}
+                        className={`w-6 h-6 object-contain ${tech.name === "OpenAI" ? "invert" : ""}`}
+                      />
+                      <span className="text-sm text-neutral-300">{tech.name}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          ))}
         </motion.div>
+
+        {/* Tech Info Panel */}
+        {hoveredTech && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            className="fixed bottom-8 left-1/2 -translate-x-1/2 px-6 py-3 bg-neutral-900/90 
+                     backdrop-blur-lg rounded-full border border-neutral-700/50 shadow-xl"
+          >
+            <p className="text-sm text-neutral-300 text-center">
+              {hoveredTech} - Expert
+            </p>
+          </motion.div>
+        )}
       </div>
     </section>
   );

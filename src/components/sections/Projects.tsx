@@ -1,4 +1,4 @@
-import { Loader2 } from "lucide-react";
+
 import { motion } from "framer-motion";
 import { SectionSeparator } from "@/components/ui/SectionSeparator";
 import { ProjectCard } from "@/components/ProjectCard";
@@ -41,9 +41,7 @@ const Projects = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <span className={`section-number ${typography.secondary}`}>
-          02<span className="ml-0.5 group-hover:text-emerald-400">.</span>
-        </span>
+     
         <motion.span 
           className="relative"
           whileHover={{ x: 10 }}
