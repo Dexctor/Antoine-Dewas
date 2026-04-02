@@ -79,7 +79,7 @@ const Navbar = memo(() => {
       )}
     >
       <div className="section-container">
-        <nav className="flex items-center justify-between h-16 md:h-20">
+        <nav className="flex items-center justify-between h-14 sm:h-16 md:h-20">
           {/* Logo */}
           <a
             href="#"
@@ -136,7 +136,7 @@ const Navbar = memo(() => {
 
       {/* Mobile menu */}
       {isMobileOpen && (
-        <div className="md:hidden fixed inset-0 top-16 bg-white z-40">
+        <div className="md:hidden fixed inset-0 top-14 sm:top-16 bg-white z-40">
           <div className="flex flex-col items-center justify-center h-full gap-8">
             {navLinks.map((link) => (
               <a

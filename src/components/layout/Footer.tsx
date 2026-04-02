@@ -33,17 +33,17 @@ const Footer = () => {
     <footer className="bg-surface-black text-white">
       <div className="section-container py-20 md:py-28">
         {/* Top section: CTA + FAQ */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-24">
           {/* Left: CTA + Social */}
           <div>
             <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
-              Lancez votre projet
+              On en discute ?
             </h2>
             <p className="text-neutral-400 mb-8">
-              Un échange de 15 minutes suffit pour cadrer votre besoin. Réponse garantie sous 24h.
+              Un échange de 15 minutes suffit pour cadrer votre besoin. Aucun engagement, réponse sous 24h.
             </p>
             <Button href="#contact" variant="primary-light" className="mb-12">
-              Démarrer mon projet
+              Réserver un diagnostic gratuit
             </Button>
 
             {/* Social links */}
@@ -91,7 +91,7 @@ const Footer = () => {
             <p className="text-sm text-neutral-500">
               &copy; {currentYear} Antoine Dewas. Tous droits réservés.
             </p>
-            <div className="flex items-center gap-6 text-sm text-neutral-500">
+            <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 text-sm text-neutral-500">
               <span>Paris</span>
               <span className="text-neutral-700">&middot;</span>
               <span>Lille</span>

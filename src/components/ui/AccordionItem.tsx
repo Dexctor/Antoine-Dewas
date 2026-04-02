@@ -16,9 +16,9 @@ const AccordionItem = ({ question, answer, className }: AccordionItemProps) => {
     <div className={cn("border-b border-neutral-800", className)}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-between w-full py-5 text-left"
+        className="flex items-center justify-between w-full py-3 sm:py-5 text-left"
       >
-        <span className="text-base font-medium text-white pr-4">{question}</span>
+        <span className="text-sm sm:text-base font-medium text-white pr-4">{question}</span>
         {isOpen ? (
           <Minus className="w-5 h-5 text-emerald-500 flex-shrink-0" />
         ) : (

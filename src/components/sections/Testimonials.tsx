@@ -62,11 +62,11 @@ const Testimonials = () => {
       </FadeIn>
 
       <FadeIn delay={0.1}>
-        <div className="columns-1 md:columns-2 xl:columns-3 gap-4">
+        <div className="columns-1 sm:columns-2 xl:columns-3 gap-3 sm:gap-4">
           {testimonials.map((testimonial, index) => (
             <div
               key={testimonial.name}
-              className="break-inside-avoid mb-4 border border-neutral-200 rounded-xl p-5 hover:border-emerald-200 hover:shadow-sm transition-all duration-300"
+              className="break-inside-avoid mb-3 sm:mb-4 border border-neutral-200 rounded-xl p-4 sm:p-5 hover:border-emerald-200 hover:shadow-sm transition-all duration-300"
             >
               {/* Stars */}
               <div className="flex gap-0.5 mb-3">

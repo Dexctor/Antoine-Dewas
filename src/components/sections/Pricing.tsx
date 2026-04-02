@@ -1,196 +1,160 @@
-import { useState } from "react";
-import { Check, ArrowRight } from "lucide-react";
+import { Check } from "lucide-react";
 import SectionWrapper from "@/components/ui/SectionWrapper";
 import CornerDots from "@/components/ui/CornerDots";
 import FadeIn from "@/components/ui/FadeIn";
 import Button from "@/components/ui/Button";
 
-const plans = [
+const offers = [
   {
     name: "One Page",
-    price: "980",
-    delay: "10 jours",
-    description: "Site une page, optimisé conversion.",
+    description: "Une page, un objectif. Idéal pour tester un marché ou lancer une offre rapidement.",
     features: [
-      "Design sur mesure",
+      "Page unique orientée conversion",
+      "Design et code sur mesure",
       "Responsive mobile & desktop",
-      "Animations & interactions",
-      "Formulaire de contact",
-      "SEO de base",
-      "Hébergement inclus",
+      "Formulaire de contact intégré",
+      "Référencement technique de base",
     ],
   },
   {
     name: "Site Vitrine",
-    price: "1 880",
-    delay: "21 jours",
-    description: "Présence en ligne pro, multi-pages.",
     popular: true,
+    description: "Votre présence en ligne professionnelle. Structuré pour générer des demandes entrantes.",
     features: [
       "3 à 5 pages sur mesure",
-      "Code 100% custom",
-      "Responsive mobile & desktop",
+      "Parcours visiteur optimisé conversion",
+      "Contenu rédigé orienté client",
       "SEO technique complet",
-      "Formulaires & analytics",
-      "2 tours de révisions",
+      "Formulaires & analytics intégrés",
     ],
   },
   {
     name: "Landing SaaS",
-    price: "2 480",
-    delay: "14 jours",
-    description: "Landing page haute conversion pour SaaS.",
+    description: "Landing page haute conversion pour SaaS et produits digitaux.",
     features: [
-      "Hero orienté conversion",
-      "Sections features & pricing",
-      "Social proof intégré",
-      "Intégration Stripe / waitlist",
-      "Analytics & tracking",
-      "A/B testing ready",
+      "Hero et proposition de valeur percutants",
+      "Sections features, pricing, social proof",
+      "Intégration Stripe ou waitlist",
+      "Analytics & tracking avancés",
+      "Conçu pour l'A/B testing",
     ],
   },
   {
-    name: "Multi-Pages",
-    price: "2 880",
-    delay: "30 jours",
-    description: "Site complet, architecture avancée.",
+    name: "Site Multi-Pages",
+    description: "Architecture complète pour les activités qui nécessitent de la profondeur.",
     features: [
-      "Pages illimitées",
-      "Architecture complète",
-      "Analytics avancés",
-      "Optimisation conversion",
-      "3 tours de révisions",
-      "Formation & support",
+      "Architecture avancée, pages illimitées",
+      "Stratégie de contenu par page",
+      "Optimisation conversion avancée",
+      "Analytics et suivi des objectifs",
+      "Formation et accompagnement post-lancement",
     ],
   },
 ];
 
-const addOns = [
-  { name: "SEO Avancé", price: "+390€", desc: "Audit, mots-clés, optimisation on-page" },
-  { name: "Motion Design", price: "+490€", desc: "Animations sur mesure, transitions" },
-  { name: "Copywriting", price: "+350€", desc: "Textes optimisés conversion" },
-  { name: "Maintenance", price: "49€/mois", desc: "Mises à jour, monitoring, support" },
-  { name: "Page supplémentaire", price: "+280€", desc: "Page additionnelle sur mesure" },
-];
+const qualifications = {
+  not: [
+    "Vous cherchez le site le moins cher possible",
+    "Vous voulez juste une carte de visite en ligne",
+    "Le design compte plus que les résultats pour vous",
+  ],
+  yes: [
+    "Vous dirigez une entreprise et voulez des demandes entrantes",
+    "Vous comprenez qu'un bon site est un investissement, pas une dépense",
+    "Vous êtes prêt à collaborer sur le contenu et la stratégie",
+  ],
+};
 
 const Pricing = () => {
-  const [selectedAddOns, setSelectedAddOns] = useState<Set<string>>(new Set());
-
-  const toggleAddOn = (name: string) => {
-    setSelectedAddOns((prev) => {
-      const next = new Set(prev);
-      next.has(name) ? next.delete(name) : next.add(name);
-      return next;
-    });
-  };
-
   return (
     <SectionWrapper variant="dark" id="pricing">
       <FadeIn>
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-white mb-4">
-            Investissez dans un site qui{" "}
-            <span className="text-emerald-400">rapporte</span>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-white mb-4 text-balance">
+            Chaque projet est{" "}
+            <span className="text-emerald-400">sur mesure</span>
           </h2>
           <p className="text-neutral-400 text-lg max-w-2xl mx-auto">
-            Des tarifs clairs, pas de surprise. Vous savez exactement ce que vous payez et ce que vous obtenez.
+            Devis fixe validé avant de démarrer. Pas de coût caché, pas de surprise. On en discute ensemble.
           </p>
         </div>
       </FadeIn>
 
-      {/* Plans grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
-        {plans.map((plan, index) => (
-          <FadeIn key={plan.name} delay={index * 0.08}>
-            <div className={`relative rounded-xl p-6 h-full flex flex-col ${
-              plan.popular
+      {/* Offers grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4 mb-10 sm:mb-12">
+        {offers.map((offer, index) => (
+          <FadeIn key={offer.name} delay={index * 0.06}>
+            <div className={`relative rounded-xl p-5 h-full flex flex-col ${
+              offer.popular
                 ? "border-2 border-emerald-500 bg-emerald-500/5"
                 : "border border-neutral-800"
             }`}>
-              {plan.popular && <CornerDots />}
-              {plan.popular && (
+              {offer.popular && <CornerDots />}
+              {offer.popular && (
                 <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-3 py-0.5 text-[10px] font-semibold text-white bg-emerald-500 rounded-full uppercase tracking-wider">
-                  Populaire
+                  Le plus demandé
                 </span>
               )}
 
-              <div className="mb-4">
-                <h3 className="text-sm font-medium text-neutral-400 mb-1">{plan.name}</h3>
-                <div className="flex items-baseline gap-0.5">
-                  <span className="text-3xl font-bold text-white">{plan.price}</span>
-                  <span className="text-lg text-white">€</span>
-                </div>
-                <p className="text-xs text-emerald-400 mt-1">Livraison en {plan.delay}</p>
-              </div>
+              <h3 className="text-lg font-semibold text-white mb-2">{offer.name}</h3>
+              <p className="text-xs text-neutral-500 mb-4 leading-relaxed">{offer.description}</p>
 
-              <p className="text-xs text-neutral-500 mb-4">{plan.description}</p>
-
-              <div className="space-y-2 mb-6 flex-grow">
-                {plan.features.map((f) => (
+              <div className="space-y-2 flex-grow">
+                {offer.features.map((f) => (
                   <div key={f} className="flex items-start gap-2">
                     <Check className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0 mt-0.5" />
                     <span className="text-xs text-neutral-300">{f}</span>
                   </div>
                 ))}
               </div>
-
-              <a
-                href="#contact"
-                className={`flex items-center justify-center gap-2 w-full py-2.5 rounded-full text-xs font-medium transition-all duration-200 ${
-                  plan.popular
-                    ? "bg-emerald-500 text-white hover:bg-emerald-600"
-                    : "border border-neutral-700 text-neutral-300 hover:border-white hover:text-white"
-                }`}
-              >
-                Choisir cette offre
-                <ArrowRight className="w-3.5 h-3.5" />
-              </a>
             </div>
           </FadeIn>
         ))}
       </div>
 
-      {/* Add-ons */}
+      {/* Qualification section - inspired by Opale */}
       <FadeIn delay={0.3}>
-        <div className="relative border border-neutral-800 rounded-xl p-6 max-w-4xl mx-auto">
+        <div className="relative border border-neutral-800 rounded-xl p-6 md:p-8 max-w-4xl mx-auto">
           <CornerDots />
-          <h3 className="text-xs font-semibold text-emerald-400 uppercase tracking-wider mb-4">
-            Options complémentaires
-          </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {addOns.map((addon) => {
-              const isSelected = selectedAddOns.has(addon.name);
-              return (
-                <button
-                  key={addon.name}
-                  onClick={() => toggleAddOn(addon.name)}
-                  className={`text-left p-3 rounded-lg border transition-all duration-200 ${
-                    isSelected
-                      ? "border-emerald-500 bg-emerald-500/10"
-                      : "border-neutral-800 hover:border-neutral-700"
-                  }`}
-                >
-                  <div className="flex items-center justify-between mb-0.5">
-                    <span className="text-xs font-medium text-white">{addon.name}</span>
-                    <span className="text-xs font-semibold text-emerald-400">{addon.price}</span>
-                  </div>
-                  <p className="text-[11px] text-neutral-500">{addon.desc}</p>
-                </button>
-              );
-            })}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+            <div>
+              <h3 className="text-sm font-semibold text-neutral-500 uppercase tracking-wider mb-4">
+                Ce n'est pas pour vous si…
+              </h3>
+              <ul className="space-y-3">
+                {qualifications.not.map((item) => (
+                  <li key={item} className="flex items-start gap-2">
+                    <span className="text-neutral-600 text-xs mt-0.5">✕</span>
+                    <span className="text-sm text-neutral-500">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-emerald-400 uppercase tracking-wider mb-4">
+                En revanche, si…
+              </h3>
+              <ul className="space-y-3">
+                {qualifications.yes.map((item) => (
+                  <li key={item} className="flex items-start gap-2">
+                    <Check className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0 mt-0.5" />
+                    <span className="text-sm text-neutral-300">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
       </FadeIn>
 
       <FadeIn delay={0.4}>
         <div className="text-center mt-10">
-          <p className="text-sm text-neutral-500 mb-4">
-            Un besoin spécifique ?{" "}
-            <a href="#contact" className="text-emerald-400 hover:underline">Demandez un devis personnalisé</a>
-          </p>
           <Button href="#contact" variant="primary-light" className="px-8 py-3.5 text-base">
-            Démarrer mon projet
+            Réserver un diagnostic gratuit
           </Button>
+          <p className="text-xs text-neutral-500 mt-3">
+            Aucun engagement. On analyse votre situation et on vous dit ce qui est possible.
+          </p>
         </div>
       </FadeIn>
     </SectionWrapper>
