@@ -1,303 +1,140 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useState, useCallback, useMemo, memo } from "react";
-import { ArrowRight, ChevronDown, ExternalLink, Globe, Lock, LayoutGrid, X, Sparkles } from "lucide-react";
-import { motion, useAnimation, useReducedMotion, AnimatePresence } from "framer-motion";
-import { MdWavingHand } from "react-icons/md";
-import { typography, textSizes } from "@/styles/typography";
+import { memo, useEffect, useState, useRef } from "react";
+import FadeIn from "@/components/ui/FadeIn";
+import Button from "@/components/ui/Button";
+import Marquee from "@/components/ui/Marquee";
+import { useInView } from "react-intersection-observer";
 
-// Composants optimisés
-const IconWrapper = memo(({ Icon, ...props }: { Icon: any; className?: string }) => (
-  <Icon {...props} />
-));
+const clientLogos = [
+  "Motus Pocus", "Kin-Siologie", "Habbone", "SAP-OD", "NFT Store", "Drone Axis", "Atrakt",
+];
 
-const WindowControls = memo(() => (
-  <div className="flex gap-2">
-    {['bg-red-400/80', 'bg-yellow-400/80', 'bg-green-400/80'].map((color, i) => (
-      <div key={i} className={`w-3 h-3 rounded-full ${color}`} />
-    ))}
-  </div>
-));
+const stats = [
+  { value: 6, suffix: "+", label: "Projets livrés" },
+  { value: 100, suffix: "%", label: "Satisfaction client" },
+  { value: 24, suffix: "h", label: "Temps de réponse" },
+];
 
-const SkillBar = memo(({ name }: { name: string }) => (
-  <div className="flex items-center justify-between">
-    <div className="text-xs text-neutral-300">{name}</div>
-    <div className="w-24 h-1.5 bg-neutral-700/50 rounded-full overflow-hidden">
-      <motion.div
-        className="h-full bg-emerald-500/50 rounded-full"
-        initial={{ width: 0 }}
-        animate={{ width: '100%' }}
-        transition={{ duration: 1, delay: Math.random() }}
-      />
-    </div>
-  </div>
-));
-
-const StatBox = memo(({ label, value }: { label: string; value: string }) => (
-  <div className="p-3 rounded-lg bg-neutral-900/50 border border-neutral-800/50 backdrop-blur-sm">
-    <div className="text-xs text-neutral-400 mb-1">{label}</div>
-    <div className="text-sm text-emerald-400">{value}</div>
-  </div>
-));
-
-const Hero = () => {
-  const [mounted, setMounted] = useState(false);
-  const [text, setText] = useState("");
-  const [isTypingComplete, setIsTypingComplete] = useState(false);
-  const [isButtonHovered, setIsButtonHovered] = useState(false);
-  const [showEasterEgg, setShowEasterEgg] = useState(false);
-  const [sparklePosition, setSparklePosition] = useState({ x: 0, y: 0 });
-
-  const shouldReduceMotion = useReducedMotion();
-  const controls = useAnimation();
-
-  const startTyping = useCallback((currentText: string, currentIndex: number) => {
-    const fullText = "Développeur Web ";
-    const typingSpeed = shouldReduceMotion ? 0 : 30;
-
-    if (currentIndex < fullText.length) {
-      setText(currentText + fullText[currentIndex]);
-      return setTimeout(
-        () => startTyping(currentText + fullText[currentIndex], currentIndex + 1),
-        typingSpeed
-      );
-    }
-    setIsTypingComplete(true);
-  }, [shouldReduceMotion]);
-
-  const handleScroll = useCallback(() => {
-    requestAnimationFrame(() => {
-      const scrolled = window.scrollY;
-      controls.start({
-        y: scrolled * 0.3,
-        opacity: 1 - scrolled / 700
-      });
-    });
-  }, [controls]);
-
-  const handleStatusHover = useCallback((e: React.MouseEvent) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    setSparklePosition({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top
-    });
-    setShowEasterEgg(true);
-  }, []);
-
-  const scrollToSection = useCallback((sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    element?.scrollIntoView({ behavior: 'smooth' });
-  }, []);
+function useCountUp(target: number, duration: number, start: boolean) {
+  const [count, setCount] = useState(0);
+  const frameRef = useRef<number>(0);
 
   useEffect(() => {
-    setMounted(true);
-    const timeoutId = startTyping("", 0);
-    return () => clearTimeout(timeoutId);
-  }, [startTyping]);
+    if (!start) return;
 
-  useEffect(() => {
-    const scrollHandler = () => requestAnimationFrame(handleScroll);
-    window.addEventListener('scroll', scrollHandler, { passive: true });
-    return () => window.removeEventListener('scroll', scrollHandler);
-  }, [handleScroll]);
+    const startTime = performance.now();
+    const animate = (now: number) => {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      // Ease out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setCount(Math.round(eased * target));
+
+      if (progress < 1) {
+        frameRef.current = requestAnimationFrame(animate);
+      }
+    };
+
+    frameRef.current = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(frameRef.current);
+  }, [target, duration, start]);
+
+  return count;
+}
+
+const StatCounter = ({ value, suffix, label, delay, started }: { value: number; suffix: string; label: string; delay: number; started: boolean }) => {
+  const count = useCountUp(value, 1500 + delay * 200, started);
 
   return (
-    <section 
-      id="hero"
-      aria-label="Introduction"
-      className="section-container relative min-h-[100svh] flex flex-col justify-center overflow-hidden px-4 sm:px-6 lg:px-8"
-    >
-      <motion.div 
-        className="spotlight spotlight-purple absolute -top-1/4 -left-1/4 w-[150%] h-[150%] sm:w-[100%] sm:h-[100%]"
-        animate={{
-          scale: [1, 1.1, 1],
-          opacity: [0.3, 0.4, 0.3],
-        }}
-        transition={{
-          duration: 6,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}
-      />
-      
-      <motion.div 
-        className="glass-panel p-4 sm:p-6 md:p-8 lg:p-10 relative z-10 w-full max-w-7xl mx-auto mb-20 sm:mb-24"
-        animate={controls}
-      >
-        <nav className="flex items-center gap-2 p-2 mb-4 rounded-t-lg bg-neutral-900/50 border-b border-neutral-800/50">
-          <WindowControls />
-          
-          <div className="flex items-center flex-1 mx-2 sm:mx-4 px-2 sm:px-3 py-1.5 rounded-md bg-neutral-800/50 text-sm text-neutral-300 overflow-hidden">
-            <IconWrapper Icon={Lock} className="min-w-4 w-4 h-4 mr-1 sm:mr-2 text-emerald-500" aria-hidden="true" />
-            <IconWrapper Icon={Globe} className="min-w-4 w-4 h-4 mr-1 sm:mr-2 text-neutral-400" aria-hidden="true" />
-            <a 
-              href="https://antoine-dewas.vercel.app"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="truncate text-xs sm:text-sm hover:text-emerald-400 transition-colors"
-              aria-label="Visiter antoine-dewas.vercel.app (s'ouvre dans un nouvel onglet)"
-            >
-              antoine-dewas.vercel.app
-            </a>
-          </div>
-        </nav>
+    <div className="text-center">
+      <div className="text-3xl md:text-4xl font-bold text-neutral-900">
+        {count}
+        <span className="text-emerald-500">{suffix}</span>
+      </div>
+      <p className="text-sm text-neutral-500 mt-1">{label}</p>
+    </div>
+  );
+};
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-          className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 lg:gap-16"
-        >
-          <div className="w-full lg:w-3/5 space-y-6 sm:space-y-8">
-            <motion.h1 className="sr-only">
-              Portfolio de Antoine Dewas - Développeur Web
-            </motion.h1>
-            
-            <motion.h2 className={`${typography.heading} ${textSizes.section} flex items-center gap-4`}>
-              Antoine Dewas
-              <motion.span
-                animate={{ 
-                  rotate: [0, 15, 0],
-                  y: [0, -5, 0]
-                }}
-                transition={{ 
-                  duration: 1.5,
-                  repeat: Infinity,
-                  repeatType: "reverse",
-                  ease: "easeInOut"
-                }}
-                className="inline-block origin-bottom"
-              >
-                <MdWavingHand className="text-yellow-400 text-3xl sm:text-4xl md:text-5xl lg:text-6xl" />
-              </motion.span>
-            </motion.h2>
-            
-            <motion.h3 className={`${typography.subheading} ${textSizes.subtitle} relative`}>
-              {text}
-              <motion.span
-                animate={{
-                  opacity: isTypingComplete ? [1, 0] : 1
-                }}
-                transition={{
-                  duration: 0.5,
-                  repeat: isTypingComplete ? Infinity : 0,
-                  repeatType: "reverse"
-                }}
-                className="absolute"
-              >
-                |
-              </motion.span>
-            </motion.h3>
-            
-            <div className="space-y-4">
-              <p className={`${typography.primary} ${textSizes.base} leading-relaxed`}>
-                Je m'appelle Antoine. Je suis développeur Web passionné par la création d'expériences numériques innovantes et performantes.
-              </p>
-              
-              <p className={`${typography.body} ${textSizes.base}`}>
-                Spécialisé dans le développement d'applications Web modernes avec React et Next.js, je m'efforce de créer des solutions élégantes et efficaces.
-              </p>
-            </div>
-            
-            <motion.button
-              onClick={() => scrollToSection('projects')}
-              onHoverStart={() => setIsButtonHovered(true)}
-              onHoverEnd={() => setIsButtonHovered(false)}
-              whileHover={{ scale: 1.01 }}
-              className="group relative w-full sm:w-auto px-6 py-3 rounded-lg overflow-hidden
-                       bg-neutral-900/50 border border-neutral-800/50 transition-all duration-300
-                       hover:border-emerald-500/50 hover:bg-neutral-800/50"
-              aria-label="Voir mes projets"
-            >
-              <span className="relative z-10 flex items-center justify-center gap-2
-                           text-base font-medium text-neutral-200
-                           group-hover:text-emerald-400 transition-colors">
-                Découvrir mes projets
-                <AnimatePresence mode="wait">
-                  {isButtonHovered ? (
-                    <IconWrapper Icon={ArrowRight} className="w-4 h-4" aria-hidden="true" />
-                  ) : (
-                    <IconWrapper Icon={ExternalLink} className="w-4 h-4" aria-hidden="true" />
-                  )}
-                </AnimatePresence>
-              </span>
-            </motion.button>
-          </div>
+const Hero = () => {
+  const [statsRef, statsInView] = useInView({ triggerOnce: true, threshold: 0.5 });
 
-          <div className="hidden lg:block lg:w-2/5 space-y-4">
-            <div className="p-4 rounded-lg bg-neutral-900/50 border border-neutral-800/50 backdrop-blur-sm relative">
-              <div 
-                className="flex items-center gap-2 mb-3 relative cursor-pointer"
-                onMouseEnter={handleStatusHover}
-                onMouseLeave={() => setShowEasterEgg(false)}
-              >
-                <div className="relative">
-                  <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  {showEasterEgg && (
-                    <motion.div
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      exit={{ scale: 0 }}
-                      className="absolute -top-1 -left-1 w-4 h-4"
-                    >
-                      <div className="absolute inset-0 animate-ping bg-emerald-500 rounded-full opacity-20" />
-                    </motion.div>
-                  )}
-                </div>
-                <span className="text-sm text-emerald-400">En ligne</span>
-                
-                <AnimatePresence>
-                  {showEasterEgg && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 10 }}
-                      className="absolute -top-12 left-0 bg-neutral-900/95 text-emerald-400 
-                               px-3 py-1.5 rounded-lg text-sm border border-emerald-500/20
-                               backdrop-blur-sm whitespace-nowrap z-50"
-                    >
-                      <div className="flex items-center gap-2">
-                        <IconWrapper Icon={Sparkles} className="w-4 h-4" />
-                        <span>Disponible pour de nouveaux projets !</span>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
+  return (
+    <section id="hero" className="section-light pt-32 pb-20 md:pt-44 md:pb-28">
+      <div className="section-container">
+        <FadeIn>
+          <div className="max-w-4xl mx-auto text-center">
+            {/* Badge */}
+            <span className="inline-block px-4 py-1.5 text-xs font-medium text-emerald-600 bg-emerald-50 rounded-full mb-8">
+              Sites web sur mesure &middot; Code qui convertit
+            </span>
 
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="text-sm text-neutral-200">Compétences</div>
-                  <div className="text-xs text-emerald-400">5+</div>
-                </div>
-                <div className="space-y-2">
-                  {['React', 'Next.js', 'TypeScript'].map((skill) => (
-                    <SkillBar key={skill} name={skill} />
-                  ))}
-                </div>
-              </div>
-            </div>
+            {/* Headline */}
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-neutral-900 mb-6 text-balance">
+              Votre site web devrait{" "}
+              <span className="text-emerald-500">générer des clients</span>
+              , pas les faire fuir
+            </h1>
 
-            <div className="grid grid-cols-2 gap-2">
-              <StatBox label="Projets" value="2+" />
-              <StatBox label="Expérience" value="1 an" />
+            {/* Subheadline */}
+            <p className="text-lg md:text-xl text-neutral-500 max-w-2xl mx-auto mb-10 leading-relaxed">
+              Je développe des sites codés sur mesure — sans WordPress, sans template —
+              pensés pour une seule chose : convertir vos visiteurs en clients payants.
+            </p>
+
+            {/* CTA */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+              <Button href="#contact" variant="primary" className="px-8 py-3.5 text-base">
+                Obtenir mon devis gratuit
+              </Button>
+              <Button href="#projects" variant="secondary" className="px-8 py-3.5 text-base">
+                Voir les réalisations
+              </Button>
             </div>
           </div>
-        </motion.div>
-      </motion.div>
+        </FadeIn>
 
-      <button 
-        onClick={() => {
-          document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
-        }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 p-2 text-slate hover:text-primary transition-colors duration-300"
-        aria-label="Défiler vers la section À propos"
-      >
-        <ChevronDown 
-          className="w-6 h-6 animate-bounce" 
-          aria-hidden="true"
-        />
-        <span className="sr-only">Défiler vers la section À propos</span>
-      </button>
+        {/* Stats */}
+        <FadeIn delay={0.15}>
+          <div ref={statsRef} className="flex items-center justify-center gap-12 md:gap-20 mb-16">
+            {stats.map((stat, i) => (
+              <StatCounter
+                key={stat.label}
+                value={stat.value}
+                suffix={stat.suffix}
+                label={stat.label}
+                delay={i}
+                started={statsInView}
+              />
+            ))}
+          </div>
+        </FadeIn>
+
+        {/* Client quote */}
+        <FadeIn delay={0.25}>
+          <div className="text-center mb-16">
+            <p className="text-sm text-neutral-400 italic">
+              &ldquo;Le site a complètement changé notre image. On reçoit 3x plus de demandes qu'avant.&rdquo;
+            </p>
+            <p className="text-xs text-neutral-500 mt-2">— Joris-Karl P., Fondateur de Drone Axis</p>
+          </div>
+        </FadeIn>
+
+        {/* Logo marquee */}
+        <FadeIn delay={0.35}>
+          <div className="border-t border-b border-neutral-200 py-8">
+            <Marquee speed={25}>
+              {clientLogos.map((name) => (
+                <span
+                  key={name}
+                  className="mx-10 text-sm font-medium text-neutral-400 whitespace-nowrap uppercase tracking-wider"
+                >
+                  {name}
+                </span>
+              ))}
+            </Marquee>
+          </div>
+        </FadeIn>
+      </div>
     </section>
   );
 };
