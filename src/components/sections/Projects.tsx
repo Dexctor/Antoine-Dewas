@@ -23,13 +23,13 @@ const projects = [
     category: "Site vitrine",
   },
   {
-    title: "Habbone",
+    title: "Sitoscope",
     description:
-      "Plateforme communautaire complète : forums, actualités, outils interactifs, système de profils et base de données d'objets.",
-    tech: ["Next.js", "TailwindCSS", "Discord API"],
-    external: "https://habbone.vercel.app",
-    image: "/habbone.png",
-    category: "Plateforme",
+      "SaaS d'audit web automatisé : 108 critères scannés (SEO, perf, a11y, sécurité). Pipeline en 7 étapes, queue Redis, analyse IA. Production-grade.",
+    tech: ["Next.js", "TypeScript", "Prisma", "Redis", "Playwright"],
+    external: "https://sitoscope.fr",
+    image: "/sitoscope.png",
+    category: "SaaS B2B",
   },
   {
     title: "SAP-OD",

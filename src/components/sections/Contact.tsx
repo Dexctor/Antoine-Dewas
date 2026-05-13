@@ -1,6 +1,6 @@
 import React from "react";
 import { useForm, ValidationError } from "@formspree/react";
-import { Loader2, Mail, ArrowUpRight } from "lucide-react";
+import { Loader2, Mail, ArrowUpRight, Calendar } from "lucide-react";
 import SectionWrapper from "@/components/ui/SectionWrapper";
 import FadeIn from "@/components/ui/FadeIn";
 import { toast } from "sonner";
@@ -32,6 +32,29 @@ const Contact = () => {
             <p className="text-neutral-500 text-lg">
               Décrivez votre situation en 2 minutes. Diagnostic gratuit, réponse sous 24h.
             </p>
+          </div>
+        </FadeIn>
+
+        <FadeIn delay={0.05}>
+          <div className="mb-8 p-5 rounded-lg border border-emerald-200 bg-emerald-50/50">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div className="flex items-start gap-3">
+                <Calendar className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm font-semibold text-neutral-900">Vous préférez en parler de vive voix ?</p>
+                  <p className="text-xs text-neutral-500 mt-0.5">Réservez un appel de 30 min, sans engagement.</p>
+                </div>
+              </div>
+              <a
+                href="https://cal.com/antoine-dewas/30min"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-medium transition-colors whitespace-nowrap"
+              >
+                Réserver un créneau
+                <ArrowUpRight className="w-3.5 h-3.5" />
+              </a>
+            </div>
           </div>
         </FadeIn>
 

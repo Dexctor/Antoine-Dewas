@@ -5,7 +5,7 @@ import Marquee from "@/components/ui/Marquee";
 import { useInView } from "react-intersection-observer";
 
 const clientLogos = [
-  "Motus Pocus", "Kin-Siologie", "Habbone", "SAP-OD", "Drone Axis", "Atrakt",
+  "Sitoscope", "Motus Pocus", "Kin-Siologie", "SAP-OD", "Drone Axis", "Atrakt",
 ];
 
 const stats = [
