@@ -7,7 +7,7 @@ import Button from "@/components/ui/Button";
 const offers = [
   {
     name: "One Page",
-    price: "980€",
+    price: "980 €",
     timeline: "10 jours",
     bestFor: "Lancer une offre ou valider un marché",
     outcome: "Une page courte qui présente l'offre et pousse vers un contact.",
@@ -23,9 +23,9 @@ const offers = [
   {
     name: "Site Vitrine",
     popular: true,
-    price: "1 880€",
+    price: "2 480 €",
     timeline: "21 jours",
-    bestFor: "PME, artisans et indépendants établis",
+    bestFor: "Petites entreprises, artisans et indépendants établis",
     outcome: "Un site complet pour expliquer vos services et recevoir des demandes qualifiées.",
     description: "Votre présence en ligne professionnelle. Structuré pour générer des demandes entrantes.",
     features: [
@@ -38,7 +38,7 @@ const offers = [
   },
   {
     name: "Landing SaaS",
-    price: "2 480€",
+    price: "2 880 €",
     timeline: "21 jours",
     bestFor: "Produit digital, SaaS ou waitlist",
     outcome: "Une page de vente qui clarifie la proposition de valeur et mesure les conversions.",
@@ -53,16 +53,17 @@ const offers = [
   },
   {
     name: "Site Multi-Pages",
-    price: "2 880€",
+    price: "3 880 €",
     timeline: "30 jours",
     bestFor: "Activités avec plusieurs services ou zones",
     outcome: "Une architecture solide pour créer plusieurs portes d'entrée SEO et commerciales.",
     description: "Architecture complète pour les activités qui nécessitent de la profondeur.",
     features: [
-      "Architecture avancée, pages illimitées",
+      "Jusqu'à 10 pages sur mesure",
       "Stratégie de contenu par page",
       "Optimisation conversion avancée",
       "Analytics et suivi des objectifs",
+      "Pages supplémentaires dès 240 € HT",
       "Formation et accompagnement post-lancement",
     ],
   },
@@ -91,8 +92,8 @@ const Pricing = () => {
             <span className="text-emerald-400">sans surprise</span>
           </h2>
           <p className="text-neutral-400 text-lg max-w-2xl mx-auto">
-            Les prix ci-dessous donnent un cadre. Le devis final est fixe, validé avant de démarrer,
-            et adapté à votre contenu, vos pages et vos objectifs.
+            Tous les tarifs sont indiqués hors taxes (HT). Le devis final est fixe, validé avant
+            le démarrage et adapté à votre contenu, vos pages et vos objectifs.
           </p>
         </div>
       </FadeIn>
@@ -116,8 +117,9 @@ const Pricing = () => {
               <h3 className="text-xl font-semibold text-white mb-3">{offer.name}</h3>
               <div className="mb-4">
                 <p className="text-3xl font-bold text-white">
+                  <span className="text-xs font-medium text-neutral-500">À partir de </span>
                   {offer.price}
-                  <span className="text-xs font-medium text-neutral-500"> HT à partir de</span>
+                  <span className="text-xs font-medium text-neutral-500"> HT</span>
                 </p>
                 <p className="text-xs text-emerald-400 mt-1">Livraison estimée : {offer.timeline}</p>
               </div>
@@ -147,7 +149,7 @@ const Pricing = () => {
       <FadeIn delay={0.25}>
         <div className="mb-10 grid grid-cols-1 md:grid-cols-3 gap-3 max-w-4xl mx-auto">
           {[
-            "Maintenance possible dès 49€/mois",
+            "Maintenance technique dès 99 €/mois",
             "Paiement en 2 fois possible selon le projet",
             "Vous êtes propriétaire du site et du code",
           ].map((item) => (

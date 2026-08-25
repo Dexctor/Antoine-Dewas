@@ -18,7 +18,7 @@ const faqItems = [
   },
   {
     question: "Comment se déroule la maintenance après la création ?",
-    answer: "Je propose une maintenance mensuelle à 49€/mois qui inclut les mises à jour de sécurité, le monitoring des performances, les corrections de bugs et un support prioritaire par email.",
+    answer: "Je propose une maintenance technique à partir de 99 €/mois. Elle inclut les mises à jour de sécurité, le suivi des performances, les corrections liées au site livré et un support prioritaire par e-mail. Les évolutions de contenu ou de fonctionnalités sont chiffrées séparément.",
   },
   {
     question: "Est-ce que le site sera bien référencé sur Google ?",

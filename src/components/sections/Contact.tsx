@@ -137,10 +137,10 @@ const Contact = () => {
                          focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 focus:outline-none"
               >
                 <option value="">Sélectionnez</option>
-                <option value="one-page">One Page - à partir de 980€</option>
-                <option value="site-vitrine">Site Vitrine - à partir de 1 880€</option>
-                <option value="landing-saas">Landing Page SaaS - à partir de 2 480€</option>
-                <option value="multi-pages">Site Multi-Pages - à partir de 2 880€</option>
+                <option value="one-page">One Page - à partir de 980 € HT</option>
+                <option value="site-vitrine">Site Vitrine - à partir de 2 480 € HT</option>
+                <option value="landing-saas">Landing Page SaaS - à partir de 2 880 € HT</option>
+                <option value="multi-pages">Site Multi-Pages - à partir de 3 880 € HT</option>
                 <option value="refonte">Refonte de site existant</option>
                 <option value="autre">Autre / Je ne sais pas encore</option>
               </select>
@@ -158,10 +158,10 @@ const Contact = () => {
                          focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 focus:outline-none"
               >
                 <option value="">Sélectionnez</option>
-                <option value="moins-1000">Moins de 1 000€</option>
-                <option value="1000-2000">1 000€ à 2 000€</option>
-                <option value="2000-3000">2 000€ à 3 000€</option>
-                <option value="3000-plus">3 000€ et plus</option>
+                <option value="moins-1500">Moins de 1 500 €</option>
+                <option value="1500-2500">1 500 € à 2 500 €</option>
+                <option value="2500-4000">2 500 € à 4 000 €</option>
+                <option value="4000-plus">4 000 € et plus</option>
                 <option value="a-definir">À définir ensemble</option>
               </select>
             </div>
