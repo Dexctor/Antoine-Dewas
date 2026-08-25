@@ -7,6 +7,10 @@ import Button from "@/components/ui/Button";
 const offers = [
   {
     name: "One Page",
+    price: "980€",
+    timeline: "10 jours",
+    bestFor: "Lancer une offre ou valider un marché",
+    outcome: "Une page courte qui présente l'offre et pousse vers un contact.",
     description: "Une page, un objectif. Idéal pour tester un marché ou lancer une offre rapidement.",
     features: [
       "Page unique orientée conversion",
@@ -19,6 +23,10 @@ const offers = [
   {
     name: "Site Vitrine",
     popular: true,
+    price: "1 880€",
+    timeline: "21 jours",
+    bestFor: "PME, artisans et indépendants établis",
+    outcome: "Un site complet pour expliquer vos services et recevoir des demandes qualifiées.",
     description: "Votre présence en ligne professionnelle. Structuré pour générer des demandes entrantes.",
     features: [
       "3 à 5 pages sur mesure",
@@ -30,6 +38,10 @@ const offers = [
   },
   {
     name: "Landing SaaS",
+    price: "2 480€",
+    timeline: "21 jours",
+    bestFor: "Produit digital, SaaS ou waitlist",
+    outcome: "Une page de vente qui clarifie la proposition de valeur et mesure les conversions.",
     description: "Landing page haute conversion pour SaaS et produits digitaux.",
     features: [
       "Hero et proposition de valeur percutants",
@@ -41,6 +53,10 @@ const offers = [
   },
   {
     name: "Site Multi-Pages",
+    price: "2 880€",
+    timeline: "30 jours",
+    bestFor: "Activités avec plusieurs services ou zones",
+    outcome: "Une architecture solide pour créer plusieurs portes d'entrée SEO et commerciales.",
     description: "Architecture complète pour les activités qui nécessitent de la profondeur.",
     features: [
       "Architecture avancée, pages illimitées",
@@ -71,23 +87,24 @@ const Pricing = () => {
       <FadeIn>
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-white mb-4 text-balance">
-            Chaque projet est{" "}
-            <span className="text-emerald-400">sur mesure</span>
+            Des offres claires,{" "}
+            <span className="text-emerald-400">sans surprise</span>
           </h2>
           <p className="text-neutral-400 text-lg max-w-2xl mx-auto">
-            Devis fixe validé avant de démarrer. Pas de coût caché, pas de surprise. On en discute ensemble.
+            Les prix ci-dessous donnent un cadre. Le devis final est fixe, validé avant de démarrer,
+            et adapté à votre contenu, vos pages et vos objectifs.
           </p>
         </div>
       </FadeIn>
 
       {/* Offers grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4 mb-10 sm:mb-12">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 lg:gap-6 max-w-5xl mx-auto mb-10 sm:mb-12">
         {offers.map((offer, index) => (
           <FadeIn key={offer.name} delay={index * 0.06}>
-            <div className={`relative rounded-xl p-5 h-full flex flex-col ${
+            <div className={`relative rounded-xl p-5 sm:p-6 h-full flex flex-col ${
               offer.popular
-                ? "border-2 border-emerald-500 bg-emerald-500/5"
-                : "border border-neutral-800"
+                ? "border-2 border-emerald-500 bg-emerald-500/10"
+                : "border border-neutral-800 bg-neutral-950"
             }`}>
               {offer.popular && <CornerDots />}
               {offer.popular && (
@@ -96,21 +113,50 @@ const Pricing = () => {
                 </span>
               )}
 
-              <h3 className="text-lg font-semibold text-white mb-2">{offer.name}</h3>
-              <p className="text-xs text-neutral-500 mb-4 leading-relaxed">{offer.description}</p>
+              <h3 className="text-xl font-semibold text-white mb-3">{offer.name}</h3>
+              <div className="mb-4">
+                <p className="text-3xl font-bold text-white">
+                  {offer.price}
+                  <span className="text-xs font-medium text-neutral-500"> HT à partir de</span>
+                </p>
+                <p className="text-xs text-emerald-400 mt-1">Livraison estimée : {offer.timeline}</p>
+              </div>
+              <div className="mb-5 rounded-lg border border-neutral-800 bg-neutral-900/70 p-4">
+                <p className="text-xs font-semibold uppercase tracking-wider text-neutral-500 mb-1">Pour qui ?</p>
+                <p className="text-sm font-medium text-neutral-200 mb-3">{offer.bestFor}</p>
+                <p className="text-sm leading-relaxed text-neutral-400">{offer.outcome}</p>
+              </div>
+              <p className="text-sm text-neutral-400 mb-5 leading-relaxed">{offer.description}</p>
 
-              <div className="space-y-2 flex-grow">
+              <div className="space-y-2.5 flex-grow">
                 {offer.features.map((f) => (
                   <div key={f} className="flex items-start gap-2">
                     <Check className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0 mt-0.5" />
-                    <span className="text-xs text-neutral-300">{f}</span>
+                    <span className="text-sm text-neutral-300">{f}</span>
                   </div>
                 ))}
               </div>
+              <Button href="#contact" variant={offer.popular ? "primary-light" : "secondary-light"} className="mt-6 justify-center text-xs px-4 py-2.5">
+                Demander un devis
+              </Button>
             </div>
           </FadeIn>
         ))}
       </div>
+
+      <FadeIn delay={0.25}>
+        <div className="mb-10 grid grid-cols-1 md:grid-cols-3 gap-3 max-w-4xl mx-auto">
+          {[
+            "Maintenance possible dès 49€/mois",
+            "Paiement en 2 fois possible selon le projet",
+            "Vous êtes propriétaire du site et du code",
+          ].map((item) => (
+            <div key={item} className="rounded-xl border border-neutral-800 bg-neutral-950 px-4 py-3 text-center text-sm text-neutral-300">
+              {item}
+            </div>
+          ))}
+        </div>
+      </FadeIn>
 
       {/* Qualification section - inspired by Opale */}
       <FadeIn delay={0.3}>
@@ -150,10 +196,10 @@ const Pricing = () => {
       <FadeIn delay={0.4}>
         <div className="text-center mt-10">
           <Button href="#contact" variant="primary-light" className="px-8 py-3.5 text-base">
-            Réserver un diagnostic gratuit
+            Demander un devis clair
           </Button>
           <p className="text-xs text-neutral-500 mt-3">
-            Aucun engagement. On analyse votre situation et on vous dit ce qui est possible.
+            Réponse sous 24h avec une recommandation réaliste, même si on ne travaille pas ensemble.
           </p>
         </div>
       </FadeIn>

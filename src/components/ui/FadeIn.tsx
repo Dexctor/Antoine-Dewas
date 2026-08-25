@@ -5,7 +5,6 @@ interface FadeInProps {
   delay?: number;
   className?: string;
   children: React.ReactNode;
-  direction?: "up" | "down" | "left" | "right" | "none";
 }
 
 const FadeIn = ({ delay = 0, className, children }: FadeInProps) => {
@@ -16,10 +15,17 @@ const FadeIn = ({ delay = 0, className, children }: FadeInProps) => {
     const el = ref.current;
     if (!el) return;
 
+    let timeoutId: number | undefined;
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setTimeout(() => setIsVisible(true), delay * 1000);
+          if (prefersReducedMotion || delay === 0) {
+            setIsVisible(true);
+          } else {
+            timeoutId = window.setTimeout(() => setIsVisible(true), delay * 1000);
+          }
           observer.unobserve(el);
         }
       },
@@ -27,15 +33,18 @@ const FadeIn = ({ delay = 0, className, children }: FadeInProps) => {
     );
 
     observer.observe(el);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      if (timeoutId !== undefined) window.clearTimeout(timeoutId);
+    };
   }, [delay]);
 
   return (
     <div
       ref={ref}
       className={cn(
-        "transition-all duration-500 ease-out",
-        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4",
+        "transition-all duration-500 ease-out motion-reduce:transition-none",
+        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 motion-reduce:translate-y-0",
         className
       )}
     >
